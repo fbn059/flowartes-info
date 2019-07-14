@@ -118,9 +118,9 @@ var faScripts = ( function( $ ) {
 					},
 				} );
 			},
-			// error: function( data ){
-			// 	console.log( data )
-			// }
+			error: function( data ){
+				console.log( data )
+			}
 		});
 		$(document).on('activeTab', function() {
 		    pricetable.redraw();
@@ -167,9 +167,9 @@ var faScripts = ( function( $ ) {
 					],
 				} );
 			},
-			// error: function( data ){
-			// 	console.log( data )
-			// }
+			error: function( data ){
+				console.log( data )
+			}
 		});
 		$(document).on('activeTab', function() {
 		    packagetable.redraw();
