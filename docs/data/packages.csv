@@ -1,0 +1,4 @@
+type,capoeira,bjj,music,maculele,capoeira-conditioning,bjj-conditioning,movement
+Martial Arts,true,true,true,true,false,false,false
+Fitness,false,false,false,true,true,true,true
+Combo,true,true,true,true,true,true,true
