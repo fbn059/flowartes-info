@@ -77,7 +77,7 @@ var faScripts = ( function( $ ) {
 	},
 
 	priceTable = function(){
-		var csvData, jsonData, table;
+		var csvData, jsonData, pricetable;
 		var $priceTableContainer = $('#price-table');
 
 		$.ajax({
@@ -128,7 +128,7 @@ var faScripts = ( function( $ ) {
 	},
 
 	packageTable = function(){
-		var csvData, jsonData, table;
+		var csvData, jsonData, packagetable;
 		var $packageTableContainer = $('#package-table');
 
 		$.ajax({
