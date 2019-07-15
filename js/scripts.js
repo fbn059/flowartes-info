@@ -88,21 +88,20 @@ var faScripts = ( function( $ ) {
 				$('#price-table').addClass('loading');
 			},
 			success: function( data ) {
+				console.log(data);
 				csvData = data;
 				jsonData = csvJSON( csvData );
-				jsonData = addIDs( jsonData ); // Need IDs for each row
+				jsonData = addIDs( jsonData );
 				pricetable = new Tabulator("#price-table", {
-					data:jsonData,           //load row data from array
-					layout:"fitColumns",      //fit columns to width of table
+					data:jsonData,
+					layout:"fitColumns",
 					responsiveLayout:false, 
-					tooltips:true,            //show tool tips on cells
-					addRowPos:"top",          //when adding a new row, add it to the top of the table
-					history:true,             //allow undo and redo actions on the table
-					//pagination:"local",       //paginate the data
-					//paginationSize:30,         //allow 7 rows per page of data
-					movableColumns:true,      //allow column order to be changed
-					resizableRows:true,       //allow row order to be changed
-					columns:[               // Define table Columns
+					tooltips:true,
+					addRowPos:"top",
+					history:true,
+					movableColumns:true,
+					resizableRows:true,
+					columns:[
 						{ title:'Package Type', field:'type', visible:false, frozen:true },
 						{ title:'Package', field:'package', minWidth: 140, frozen:true, widthgrow:1 },
 			            { title:'Adult (SGD $)', field:'adult', sorter:"number", width: 130, widthgrow:1 },
@@ -139,21 +138,20 @@ var faScripts = ( function( $ ) {
 				$('#package-table').addClass('loading');
 			},
 			success: function( data ) {
+				console.log(data);
 				csvData = data;
 				jsonData = csvJSON( csvData );
-				jsonData = addIDs( jsonData ); // Need IDs for each row
+				jsonData = addIDs( jsonData );
 				packagetable = new Tabulator("#package-table", {
-					data:jsonData,           //load row data from array
-					layout:"fitColumns",      //fit columns to width of table
+					data:jsonData,
+					layout:"fitColumns",
 					responsiveLayout:false, 
-					tooltips:true,            //show tool tips on cells
-					addRowPos:"top",          //when adding a new row, add it to the top of the table
-					history:true,             //allow undo and redo actions on the table
-					//pagination:"local",       //paginate the data
-					//paginationSize:30,         //allow 7 rows per page of data
-					movableColumns:true,      //allow column order to be changed
-					resizableRows:true,       //allow row order to be changed
-					columns:[               // Define table Columns
+					tooltips:true,
+					addRowPos:"top",
+					history:true,
+					movableColumns:true,
+					resizableRows:true,
+					columns:[
 						{ title:'Package Type', field:'type', visible:true, width:130, frozen:true },
 						{ title:'Capoeira', field:'capoeira', sorter:"boolean", formatter:"tickCross", minWidth: 100, widthgrow:1 },
 			            { title:'BJJ', field:'bjj', sorter:"boolean", formatter:"tickCross", width: 70, widthgrow:1 },
@@ -162,7 +160,7 @@ var faScripts = ( function( $ ) {
 			            { title:'BJJ Conditioning', field:'bjj-conditioning', sorter:"boolean", formatter:"tickCross", width: 120, widthgrow:1 },
 			            { title:'Movement', field:'movement', sorter:"boolean", formatter:"tickCross", width: 120, widthgrow:1 },
 					],
-					initialSort:[             //set the initial sort order of the data
+					initialSort:[
 						{column:"type", dir:"asc"},
 					],
 				} );
