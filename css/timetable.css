@@ -1,0 +1,44 @@
+/* Timetable styles */
+
+.schedule-table-container {
+	overflow: hidden;
+	overflow: scroll;
+	padding: 20px 0;
+}
+
+#schedule-table {
+	width: auto;
+	font-size: 15px;
+	white-space: nowrap;
+}
+
+#schedule-table .day {
+	width: 45%;
+	display: inline-block;
+	padding: 0 2px;
+	vertical-align: top;
+}
+
+.period {
+	list-style-type: none;
+	padding: 3px;
+	font-size: 14px;
+	margin-bottom: 3px;
+	color: #000;
+	white-space: normal;
+}
+
+.day-name {
+	text-transform: uppercase;
+	font-weight: 600;
+}
+
+.period-title {
+	font-weight: 600;
+}
+
+@media (min-width:768px){ 
+	#schedule-table .day {
+		width: 30%;
+	}
+}

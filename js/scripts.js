@@ -76,6 +76,35 @@ var faScripts = ( function( $ ) {
 	    });
 	},
 
+	schedule = function(){
+		var csvData, 
+		    jsonData,
+		    scheduleData,
+		    scheduleMarkup,
+		    scheduleTableContainer = $("#schedule-table");
+
+		$.ajax({
+			url: 'data/schedule.csv',
+			dataType: 'text',
+			async: true,
+			beforeSend: function(){
+				scheduleTableContainer.addClass('loading');
+			},
+			success: function( data ) {
+				csvData = data;
+				jsonData = csvJSON( csvData );
+
+				scheduleData = formatScheduleData( jsonData );
+
+				scheduleMarkup = scheduleTable( scheduleData );
+
+				scheduleTableContainer.html( scheduleMarkup );
+			},
+			error: function( data ){
+			}
+		});
+	},
+
 	priceTable = function(){
 		var csvData, jsonData, pricetable;
 		var $priceTableContainer = $('#price-table');
@@ -85,13 +114,14 @@ var faScripts = ( function( $ ) {
 			dataType: 'text',
 			async: true,
 			beforeSend: function(){
-				$('#price-table').addClass('loading');
+				$priceTableContainer.addClass('loading');
 			},
 			success: function( data ) {
-				console.log(data);
+				
 				csvData = data;
 				jsonData = csvJSON( csvData );
 				jsonData = addIDs( jsonData );
+				
 				pricetable = new Tabulator("#price-table", {
 					data:jsonData,
 					layout:"fitColumns",
@@ -116,9 +146,9 @@ var faScripts = ( function( $ ) {
 					    return 'Package Type: ' +value;
 					},
 				} );
+				$priceTableContainer.removeClass('loading');
 			},
 			error: function( data ){
-				console.log( data )
 			}
 		});
 		$(document).on('activeTab', function() {
@@ -135,13 +165,14 @@ var faScripts = ( function( $ ) {
 			dataType: 'text',
 			async: true,
 			beforeSend: function(){
-				$('#package-table').addClass('loading');
+				$packageTableContainer.addClass('loading');
 			},
 			success: function( data ) {
-				console.log(data);
+
 				csvData = data;
 				jsonData = csvJSON( csvData );
 				jsonData = addIDs( jsonData );
+				
 				packagetable = new Tabulator("#package-table", {
 					data:jsonData,
 					layout:"fitColumns",
@@ -164,9 +195,9 @@ var faScripts = ( function( $ ) {
 						{column:"type", dir:"asc"},
 					],
 				} );
+				$packageTableContainer.removeClass('loading');
 			},
 			error: function( data ){
-				console.log( data )
 			}
 		});
 		$(document).on('activeTab', function() {
@@ -189,6 +220,7 @@ var faScripts = ( function( $ ) {
 		scrollHeader();
 		priceTable();
 		packageTable();
+		schedule();
 	};
 
 	function getHashFilter() {
@@ -206,7 +238,9 @@ var faScripts = ( function( $ ) {
 	function csvJSON( csv ){
 		// var csv is the CSV file with headers
 
-		var lines=csv.split("\r");
+		// different linebreaks on different OS. Need to keep this in mind
+		//https://stackoverflow.com/questions/5034781/js-regex-to-split-by-line
+		var lines=csv.match(/[^\r\n]+/g);
 
 		var result = [];
 
@@ -220,8 +254,9 @@ var faScripts = ( function( $ ) {
 		  for(var j=0;j<headers.length;j++){
 			  obj[headers[j]] = currentline[j];
 		  }
-
-		  result.push(obj);
+		  if( !isEmpty(obj) ) {
+		  	result.push(obj);
+		  }
 
 		}
 
@@ -234,6 +269,78 @@ var faScripts = ( function( $ ) {
 				data[index].id = index + 1;
 		} );
 		return data;
+	}
+
+	function formatScheduleData( data ) {
+		var arr = [],
+		    day,
+		    period = {};
+		
+		// Setup structure of schedule data array
+		for(var i=0;i<7;i++){
+			arr[i] = {
+				"day": i,
+				"periods" : [
+				]
+			};
+		}
+
+		// [
+		//   {
+		//     "day": "Day number",
+		//     "periods": [
+		//       {
+		//         "start": "Period start time",
+		//         "end": "Period end time",
+		//         "title": "Period title",
+		//         "backgroundColor": "Period background color",
+		//         "borderColor":"Period border color",
+		//         "textColor": "Period text color"
+		//       }
+		//     ]
+		//   }
+		// ]
+		$.each( data, function( index, value ){
+
+			if( value.dayNumber.length ){
+
+				day = parseInt( value.dayNumber );
+				period = value;
+				arr[day].periods.push(period);
+			}	
+		} );
+		return arr;
+	}
+
+	function scheduleTable( data ) {
+		console.log(data);
+		var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+		var periods;
+		var html = '';
+		var day;
+		var title, time;
+		$.each( data, function( index, day ){
+			periods = day.periods;
+			day = days[parseInt(day.day)];
+			html += '<div class="day">';
+			html += '<p class="day-name">'+ day +'</p>';
+			$.each( periods, function( i, period ){
+				title = '<span class="period-title">'+ period.title +'</span><br/>';
+				time = '<span class="period-time">'+ period.start + "–" + period.end +'</span>'
+				html += '<li class="period" style="background-color:'+period.backgroundColor.replace(/\|/g,',')+'">'+ title + time +'</li>';
+			} );
+			html += '</div>';
+		} );
+		return $.parseHTML(html);
+	}
+	
+	// https://coderwall.com/p/_g3x9q/how-to-check-if-javascript-object-is-empty
+	function isEmpty(obj) {
+	    for(var key in obj) {
+	        if(obj.hasOwnProperty(key))
+	            return false;
+	    }
+	    return true;
 	}
 
 }( jQuery ) );
